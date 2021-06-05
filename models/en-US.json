@@ -53,6 +53,13 @@
                   ]
               },
               {
+                  "name": "IngredientsReminderIntent",
+                  "slots": [],
+                  "samples": [
+                      "Can you tell me the ingredients again"
+                  ]
+              },
+              {
                   "name": "InstructionsIntent",
                   "slots": [],
                   "samples": [

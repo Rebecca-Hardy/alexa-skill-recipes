@@ -322,6 +322,15 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
 
     this.emit(':ask', `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`, `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`)
   },
+  'IngredientsReminderIntent': function(){
+    const ingredients = this.attributes['recipe'].ingredients;
+    if (ingredients.length > 0) {
+      const ingredientsText = ingredients.join(', ').replace(/,(?!.*,)/gmi, ' and'); // Add 'and' before last ingredient
+      this.emit(':tell', `${INGREDIENTS_REMINDER_INTRO} ${ingredientsText}`);
+    } else {
+      this.emit(":tell", INGREDIENTS_REMINDER_NONE);
+    }
+  },
   'AMAZON.YesIntent': function(){
     this.attributes['instructions'] = this.attributes['recipe'].instructions;
     this.attributes['current_step'] = 0;
