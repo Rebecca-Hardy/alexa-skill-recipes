@@ -220,17 +220,20 @@ const recipes = {
       ],
       ingredients: [
         "2 cups flour",
+        "sugar",
         "2 cups of milk",
         "1 and a half cups of sparkling water",
         "250 grams of Nutella",
         "4 eggs whole"
       ],
       ingredientSteps: [
-        [0,2],
-        [1],
-        [1],
-        [5],
-        [1]
+        [0,1],
+        [5,2,3],
+        [],
+        [],
+        [],
+        [4],
+        []
       ]
     }
   ]
@@ -357,15 +360,6 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
 
     this.emit(':ask', `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`, `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`)
   },
-  'IngredientsReminderIntent': function(){
-    const ingredients = _getIngredientsForStep(this.attributes['recipe'], this.attributes['current_step']);
-    if (ingredients.length > 0) {
-      const ingredientsText = ingredients.join(', ').replace(/,(?!.*,)/gmi, ' and'); // Add 'and' before last ingredient
-      this.emit(':tell', `${INGREDIENTS_REMINDER_INTRO} ${ingredientsText}`);
-    } else {
-      this.emit(":tell", INGREDIENTS_REMINDER_NONE);
-    }
-  },
   'AMAZON.YesIntent': function(){
     this.attributes['instructions'] = this.attributes['recipe'].instructions;
     this.attributes['current_step'] = 0;
@@ -393,6 +387,15 @@ const instructionsModeHandlers = Alexa.CreateStateHandler(states.INSTRUCTIONSMOD
   'InstructionsIntent': function(){
     const firstTimeInstructions = (this.attributes['current_step'] === 0) ? FIRST_TIME_INSTRUCTIONS : '';
     this.emit(':ask', `${_getCurrentStep(this)} ${firstTimeInstructions}`, REPROMPT_INSTRUCTIONS);
+  },
+  'IngredientsReminderIntent': function(){
+    const ingredients = _getIngredientsForStep(this.attributes['recipe'], this.attributes['current_step']);
+    if (ingredients.length > 0) {
+      const ingredientsText = ingredients.join(', ').replace(/,(?!.*,)/gmi, ' and'); // Add 'and' before last ingredient
+      this.emit(':ask', `${INGREDIENTS_REMINDER_INTRO} ${ingredientsText}`, "Do you want to hear the next step?");
+    } else {
+      this.emit(":ask", INGREDIENTS_REMINDER_NONE, "Do you want to hear the next step?");
+    }
   },
   'NextStepIntent': function(){
     this.attributes['current_step']++;
