@@ -32,7 +32,8 @@ const MISUNDERSTOOD_RECIPE_ANSWER = "Please answer with yes or no.";
 const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?"
 const INGREDIENTS_INTRO = "You will need"; // Here follows a list of ingredients
 const INGREDIENTS_ENDING = "Does that sound like a meal you want to eat?"; // Will be said after the list of ingredients
-
+const INGREDIENTS_REMINDER_INTRO = "The ingredients for this step are"; //the ingredients will follows
+const INGREDIENTS_REMINDER_NONE = "You've already got the ingredients measured out"; //for if there are no measurements for ingredients
 
 const FIRST_TIME_INSTRUCTIONS = "Say 'next' to go to the next line of instructions. Say 'repeat' if you didn't understand me or want to hear the last line of instructions again.";
 const REPROMPT_INSTRUCTIONS = "Say 'next' to go to the next line of instructions. Say 'repeat' if you didn't understand me or want to hear the last line of instructions again.";
