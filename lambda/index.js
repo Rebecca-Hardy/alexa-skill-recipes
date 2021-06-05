@@ -205,6 +205,34 @@ const recipes = {
         "beef jerkey"
       ]
     }
+  ],
+  dessert: [
+    {
+      name: "Crepe cake",
+      instructions: [
+        "Prepare the pancake mix by mixing together flour, sugar and salt",
+        "In another bowl whisk together eggs, milk, and sparkling water ",
+        "Slowly add in the the egg mix into the flour and combine till smooth.",
+        "Chill this mixture in the fridge for as you warm up the frying pan with some oil.",
+        "Pour in the egg mixture to the pan to thinly coat it, cook for 15 to 30 seconds. Repeat this process with each new crepe and use a towel to stack them.",
+        "Once all are cooked and cooled start to build up the cake by layering the nutella on the pancake, then add another pancakw with more nutella on to stack them.",
+        "Once you have stacked them all, marvel at your work before devouring them."
+      ],
+      ingredients: [
+        "2 cups flour",
+        "2 cups of milk",
+        "1 and a half cups of sparkling water",
+        "250 grams of Nutella",
+        "4 eggs whole"
+      ],
+      ingredientSteps: [
+        [0,2],
+        [1],
+        [1],
+        [5],
+        [1]
+      ]
+    }
   ]
 };
 
@@ -241,6 +269,13 @@ const _setMealType = handler => {
 
 const _randomIndexOfArray = (array) => Math.floor(Math.random() * array.length);
 const _pickRandom = (array) => array[_randomIndexOfArray(array)];
+
+const _getIngredientsForStep = (recipe, stepIndex) => {
+  if (!recipe.ingredientSteps) {
+    return [];
+  }
+  return recipe.ingredientSteps[stepIndex].map(ingredientIndex => recipe.ingredients[ingredientIndex]);
+}
 
 // Handle user input and intents:
 
@@ -323,7 +358,7 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
     this.emit(':ask', `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`, `${INGREDIENTS_INTRO} ${ingredients}. ${INGREDIENTS_ENDING}`)
   },
   'IngredientsReminderIntent': function(){
-    const ingredients = this.attributes['recipe'].ingredients;
+    const ingredients = _getIngredientsForStep(this.attributes['recipe'], this.attributes['current_step']);
     if (ingredients.length > 0) {
       const ingredientsText = ingredients.join(', ').replace(/,(?!.*,)/gmi, ' and'); // Add 'and' before last ingredient
       this.emit(':tell', `${INGREDIENTS_REMINDER_INTRO} ${ingredientsText}`);
