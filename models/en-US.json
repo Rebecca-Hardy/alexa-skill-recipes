@@ -40,6 +40,50 @@
                   ]
               },
               {
+                  "name": "ChooseFirstRecipeIntent",
+                  "samples": [
+                      "number one",
+                      "one",
+                      "the first one"
+                  ]
+              },
+              {
+                  "name": "ChooseSecondRecipeIntent",
+                  "samples": [
+                      "number two",
+                      "two",
+                      "the second one"
+                  ]
+              },
+              {
+                  "name": "MoreRecipesIntent",
+                  "samples": [
+                      "next",
+                      "more"
+                  ]
+              },
+              {
+                  "name": "StartRecipeIntent",
+                  "samples": [
+                      "start",
+                      "start the recipe"
+                  ]
+              },
+              {
+                  "name": "SaveRecipeIntent",
+                  "samples": [
+                      "save",
+                      "save the recipe"
+                  ]
+              },
+              {
+                  "name": "SendRecipeIntent",
+                  "samples": [
+                      "send",
+                      "send it to my phone"
+                  ]
+              },
+              {
                   "name": "IngredientsIntent",
                   "slots": [],
                   "samples": [

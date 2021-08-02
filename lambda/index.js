@@ -13,6 +13,7 @@ const CANCEL_MESSAGE = "Okay. See you next time.";
 const HELP_START = "I can help you find recipes by meal type or ingredient and save them. I can also inspire you with a surprise recipe and help you rate a recipe. Would you like to search for a recipe, access your saved recipes, hear a surprise recipe or rate a recipe?";
 const HELP_START_REPROMPT = "Do you want to find a recipe like breakfast, access your saved recipes, hear a surprise recipe or rate a recipe?";
 const HELP_RECIPE = "";
+const HELP_RECIPE_REPROMPT = "";
 const HELP_INSTRUCTIONS = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions.";
 const HELP_INSTRUCTIONS_REPROMPT = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions.";
 
@@ -24,16 +25,17 @@ const RECIPE_ADJECTIVES = [
   "lovely",
   "super simple",
   "fun",
-  "tasty"
+  "tasty",
   "easy"
 ];
-const SUGGEST_RECIPE = recipeName => `So I've found 2 recipes for {meal type}: a {curried sweet potato pancake with raisins} or a {kimchi pancake with mayo sauce}, you can say 1 or 2 or next for another recipe`;
+const SUGGEST_TWO_RECIPES = (mealType, recipeName1, recipeName2) => `So I've found 2 recipes for ${mealType}: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`;
 const MISUNDERSTOOD_RECIPE_ANSWER = "Sorry, I didn't catch that, you can choose between {recipe name} or a {recipe name} otherwise ask for another suggestion";
 const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
 const next_recipe = "Sure let's take a look for a new recipe, how about: {recipe name} or {recipe name}?";
-const no_more recipes ="";
-const what_next = "{recipe name} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone"''
-const affirm_what_next = "Sure, I've sent the recipe details to your phone";
+const no_more_recipes ="";
+const WHAT_NEXT = recipeName => `${recipeName} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone`;
+const RECIPE_SAVED = "No worries mate, I've saved the recipe for later";
+const SENT_TO_PHONE = "Sure, I've sent the recipe details to your phone";
 const INGREDIENTS_INTRO = "You will need"; // Here follows a list of ingredients
 const INGREDIENTS_ENDING = ""; // Will be said after the list of ingredients
 const INGREDIENTS_REMINDER_INTRO = "The ingredients for this step are"; //the ingredients will follows
@@ -178,6 +180,35 @@ const recipes = {
         [4],
         []
       ]
+    },
+    {
+      name: "Crepe cake 2",
+      instructions: [
+        "Prepare the pancake mix by mixing together flour, sugar and salt",
+        "In another bowl whisk together eggs, milk, and sparkling water ",
+        "Slowly add in the the egg mix into the flour and combine till smooth.",
+        "Chill this mixture in the fridge as you warm up the frying pan with some oil.",
+        "Pour in the egg mixture to the pan to thinly coat it, cook for 15 to 30 seconds. Repeat this process with each new crepe and use a towel to stack them.",
+        "Once all are cooked and cooled. start to build up the cake by layering the nutella on the pancake, then add another pancakw with more nutella on to stack them.",
+        "Once you have stacked them all, marvel at your work before devouring them."
+      ],
+      ingredients: [
+        "2 cups flour",
+        "sugar",
+        "2 cups of milk",
+        "1 and a half cups of sparkling water",
+        "250 grams of Nutella",
+        "4 eggs whole"
+      ],
+      ingredientSteps: [
+        [0,1],
+        [5,2,3],
+        [],
+        [],
+        [],
+        [4],
+        []
+      ]
     }
   ]
 };
@@ -207,11 +238,14 @@ const _checkMealTypePresence = handler => {
 const _setMealType = handler => {
   // Reset remaining recipes in case the user went back from before
   handler.attributes['mealType'] = _selectedMealType(handler);
-  handler.attributes['remainingRecipes'] = recipes[handler.attributes['mealType']];
+  _resetRemainingRecipes(handler)
   handler.handler.state = states.RECIPEMODE;
   handler.emitWithState("Recipe");
   return true;
 };
+const _resetRemainingRecipes = handler => {
+  handler.attributes['remainingRecipes'] = recipes[handler.attributes['mealType']].slice();
+}
 
 const _randomIndexOfArray = (array) => Math.floor(Math.random() * array.length);
 const _pickRandom = (array) => array[_randomIndexOfArray(array)];
@@ -228,6 +262,8 @@ const _getIngredientsForStep = (recipe, stepIndex) => {
 const states = {
   STARTMODE: "_STARTMODE",
   RECIPEMODE: "_RECIPEMODE",
+  NOMORERECIPESMODE: "_NOMORERECIPESMODE",
+  SELECTEDRECIPEMODE: "_SELECTEDRECIPEMODE",
   INSTRUCTIONSMODE: "_INSTRUCTIONSMODE"
 };
 
@@ -284,19 +320,36 @@ const startModeHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
 const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
   'Recipe': function(){
     if(this.new){
-      this.attributes['remainingRecipes'] = recipes[this.handler.attributes['mealType']];
+      _resetRemainingRecipes(this);
     }
 
-    if(this.attributes['remainingRecipes'].length > 0){
-      // Select random recipe and remove it form remainingRecipes
-      this.attributes['recipe'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
+    if(this.attributes['remainingRecipes'].length >= 2){
+      // Select 2 random recipes and remove them form remainingRecipes
+      this.attributes['recipe1'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
+      this.attributes['recipe2'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
       // Ask user to confirm selection
-      this.emit(':ask', SUGGEST_RECIPE(this.attributes['recipe'].name), SUGGEST_RECIPE(this.attributes['recipe'].name));
+      this.emit(
+        ':ask',
+        SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name),
+        SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name)
+      );
     }else{
-      this.attributes['remainingRecipes'] = recipes[this.attributes['mealType']];
-      this.handler.state = states.CANCELMODE;
-      this.emitWithState('NoRecipeLeftHandler');
+      this.handler.state = states.NOMORERECIPESMODE;
+      this.emitWithState('Prompt');
     }
+  },
+  'ChooseFirstRecipeIntent': function() {
+    this.attributes['recipe'] = this.attributes['recipe1']
+    this.handler.state = states.SELECTEDRECIPEMODE;
+    this.emitWithState('Prompt');
+  },
+  'ChooseSecondRecipeIntent': function() {
+    this.attributes['recipe'] = this.attributes['recipe2']
+    this.handler.state = states.SELECTEDRECIPEMODE;
+    this.emitWithState('Prompt');
+  },
+  'MoreRecipesIntent': function() {
+    this.emitWithState('Recipe');
   },
   'IngredientsIntent': function(){
     var ingredients = this.attributes['recipe'].ingredients.join(', ').replace(/,(?!.*,)/gmi, ' and'); // Add 'and' before last ingredient
@@ -311,6 +364,63 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
   },
   'AMAZON.NoIntent': function(){
     this.emitWithState('Recipe');
+  },
+  'AMAZON.HelpIntent': function(){
+    this.emit(':ask', HELP_RECIPE, HELP_RECIPE_REPROMPT);
+  },
+  'AMAZON.CancelIntent': function(){
+    this.emit(':tell', CANCEL_MESSAGE);
+  },
+  'AMAZON.StopIntent': function(){
+    this.emit(':tell', STOP_MESSAGE);
+  },
+  'Unhandled': function(){
+    this.emit(':ask', MISUNDERSTOOD_RECIPE_ANSWER, MISUNDERSTOOD_RECIPE_ANSWER);
+  }
+});
+
+const noMoreRecipesModeHandlers = Alexa.CreateStateHandler(states.NOMORERECIPESMODE, {
+  'Prompt': function(){
+    this.emit(':ask', NO_REMAINING_RECIPE, NO_REMAINING_RECIPE);
+  },
+  'AMAZON.YesIntent': function(){
+    this.attributes['mealType'] = null;
+    this.handler.state = states.STARTMODE;
+    this.emitWithState('NewSession');
+  },
+  'AMAZON.NoIntent': function(){
+    this.emit(':tell', STOP_MESSAGE);
+  },
+  'AMAZON.HelpIntent': function(){
+    this.emit(':ask', HELP_RECIPE, HELP_RECIPE_REPROMPT);
+  },
+  'AMAZON.CancelIntent': function(){
+    this.emit(':tell', CANCEL_MESSAGE);
+  },
+  'AMAZON.StopIntent': function(){
+    this.emit(':tell', STOP_MESSAGE);
+  },
+  'Unhandled': function(){
+    this.emit(':ask', MISUNDERSTOOD_RECIPE_ANSWER, MISUNDERSTOOD_RECIPE_ANSWER);
+  }
+});
+
+const selectedRecipeModeHandlers = Alexa.CreateStateHandler(states.SELECTEDRECIPEMODE, {
+  'Prompt': function(){
+    const text = WHAT_NEXT(this.attributes['recipe'].name)
+    this.emit(':ask', text, text);
+  },
+  'StartRecipeIntent': function() {
+    this.attributes['instructions'] = this.attributes['recipe'].instructions;
+    this.attributes['current_step'] = 0;
+    this.handler.state = states.INSTRUCTIONSMODE;
+    this.emitWithState('InstructionsIntent');
+  },
+  'SaveRecipeIntent': function() {
+    this.emit(':tell', RECIPE_SAVED)
+  },
+  'SendRecipeIntent': function() {
+    this.emit(':tell', SENT_TO_PHONE)
   },
   'AMAZON.HelpIntent': function(){
     this.emit(':ask', HELP_RECIPE, HELP_RECIPE_REPROMPT);
@@ -375,6 +485,13 @@ const instructionsModeHandlers = Alexa.CreateStateHandler(states.INSTRUCTIONSMOD
 exports.handler = (event, context, callback) => {
   const alexa = Alexa.handler(event, context);
   alexa.APP_ID = APP_ID;
-  alexa.registerHandlers(newSessionhandlers, startModeHandlers, recipeModeHandlers, instructionsModeHandlers);
+  alexa.registerHandlers(
+    newSessionhandlers,
+    startModeHandlers,
+    recipeModeHandlers,
+    noMoreRecipesModeHandlers,
+    selectedRecipeModeHandlers,
+    instructionsModeHandlers
+  );
   alexa.execute();
 };
