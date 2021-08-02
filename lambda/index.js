@@ -31,8 +31,7 @@ const RECIPE_ADJECTIVES = [
 const SUGGEST_TWO_RECIPES = (mealType, recipeName1, recipeName2) => `So I've found 2 recipes for ${mealType}: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`;
 const MISUNDERSTOOD_RECIPE_ANSWER = "Sorry, I didn't catch that, you can choose between {recipe name} or a {recipe name} otherwise ask for another suggestion";
 const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
-const next_recipe = "Sure let's take a look for a new recipe, how about: {recipe name} or {recipe name}?";
-const no_more_recipes ="";
+const MORE_RECIPES = (recipeName1, recipeName2) => `Sure let's take a look for a new recipe, how about: ${recipeName1} or ${recipeName2}?`;
 const WHAT_NEXT = recipeName => `${recipeName} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone`;
 const RECIPE_SAVED = "No worries mate, I've saved the recipe for later";
 const SENT_TO_PHONE = "Sure, I've sent the recipe details to your phone";
@@ -245,6 +244,7 @@ const _setMealType = handler => {
 };
 const _resetRemainingRecipes = handler => {
   handler.attributes['remainingRecipes'] = recipes[handler.attributes['mealType']].slice();
+  handler.attributes['recipesWerePresented'] = false;
 }
 
 const _randomIndexOfArray = (array) => Math.floor(Math.random() * array.length);
@@ -324,15 +324,26 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
     }
 
     if(this.attributes['remainingRecipes'].length >= 2){
+      // Check if we've already presented some recipes
+      const firstRecipes = !this.attributes['recipesWerePresented'];
+      this.attributes['recipesWerePresented'] = true
       // Select 2 random recipes and remove them form remainingRecipes
       this.attributes['recipe1'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
       this.attributes['recipe2'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
       // Ask user to confirm selection
-      this.emit(
-        ':ask',
-        SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name),
-        SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name)
-      );
+      if (firstRecipes) {
+        this.emit(
+          ':ask',
+          SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name),
+          SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name)
+        );
+      } else {
+        this.emit(
+          ':ask',
+          MORE_RECIPES(this.attributes['recipe1'].name, this.attributes['recipe2'].name),
+          MORE_RECIPES(this.attributes['recipe1'].name, this.attributes['recipe2'].name)
+        );
+      }
     }else{
       this.handler.state = states.NOMORERECIPESMODE;
       this.emitWithState('Prompt');
