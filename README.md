@@ -2,7 +2,7 @@
 
 ## Description
 
-Ask Alexa to `Ask Five Minute Recipes` to give you short recipes for breakfast, lunch, dinner, or a snack.
+Ask Alexa to `Open Pancake Plaisir` to give you short pancake recipes for breakfast, lunch, dinner, dessert or a snack.
 
 ## Setup
 

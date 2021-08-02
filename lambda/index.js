@@ -6,32 +6,36 @@ const APP_ID = undefined;
 Data: Customize the data below as you please.
 ***********/
 
-const SKILL_NAME = "Five Minute Recipes";
-const STOP_MESSAGE = "See you next time.";
+const SKILL_NAME = "Pancake Plaisir";
+const STOP_MESSAGE = "Alright, have a good day!";
 const CANCEL_MESSAGE = "Okay. See you next time.";
 
-const HELP_START = "I know how to make tasty meals in less than 5 minutes. You can choose a breakfast, lunch, snack, or dinner recipe. What type of recipe would you like to choose? Just say it!";
-const HELP_START_REPROMPT = "I have recipes for breakfast, lunch, snack and dinner. Just tell me what type of meal you'd like.";
-const HELP_RECIPE = "Choose whatever recipe you want. Do you want to proceed?";
-const HELP_RECIPE_REPROMPT = "Choose whatever recipe you want. Do you want to proceed?";
-const HELP_INSTRUCTIONS = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions. What is your choice?";
-const HELP_INSTRUCTIONS_REPROMPT = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions. What is your choice?";
+const HELP_START = "I can help you find recipes by meal type or ingredient and save them. I can also inspire you with a surprise recipe and help you rate a recipe. Would you like to search for a recipe, access your saved recipes, hear a surprise recipe or rate a recipe?";
+const HELP_START_REPROMPT = "Do you want to find a recipe like breakfast, access your saved recipes, hear a surprise recipe or rate a recipe?";
+const HELP_RECIPE = "";
+const HELP_INSTRUCTIONS = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions.";
+const HELP_INSTRUCTIONS_REPROMPT = "You can ask me to repeat the instructions or say 'next' to hear the next line of instructions.";
 
-const CHOOSE_TYPE_MESSAGE = `Welcome to ${SKILL_NAME}! I know some cool breakfast, lunch, snack, or dinner foods. What kind of recipe are you looking for?`;
-const REPROMPT_TYPE = "You can choose a breakfast, lunch, snack, or dinner recipe. What type of recipe would you like to choose?";
-const MEALTYPE_NOT_IN_LIST = chosenType => `Sorry, I couldn't find any recipes for ${chosenType}. Do you want a breakfast, lunch, dinner or snack recipe?`;
+const CHOOSE_TYPE_MESSAGE = `Hey, welcome to ${SKILL_NAME}! I'm here to help you cook delicious, nutricious and indulgent pancake meals! To start simply ask for a meal like {breakfast}, give me an ingredient like {cheese} or ask for a surprise recipe`;
+const REPROMPT_TYPE = "I can help you make tastey pancake meals by meal type, ingredient or ask for a surprise. What would you like?";
+const MEALTYPE_NOT_IN_LIST = chosenType => `Oh no, it doesn't look like we have any recipes for that, would you like a breakfast, lunch, dinner, dessert or snack recipe?`;
 
 const RECIPE_ADJECTIVES = [
-  "awesome",
+  "lovely",
   "super simple",
   "fun",
-  "extremely tasty"
+  "tasty"
+  "easy"
 ];
-const SUGGEST_RECIPE = recipeName => `I found this ${_pickRandom(RECIPE_ADJECTIVES)} ${recipeName} recipe! Do you want me to tell you how to make ${recipeName}?`;
-const MISUNDERSTOOD_RECIPE_ANSWER = "Please answer with yes or no.";
-const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?"
+const SUGGEST_RECIPE = recipeName => `So I've found 2 recipes for {meal type}: a {curried sweet potato pancake with raisins} or a {kimchi pancake with mayo sauce}, you can say 1 or 2 or next for another recipe`;
+const MISUNDERSTOOD_RECIPE_ANSWER = "Sorry, I didn't catch that, you can choose between {recipe name} or a {recipe name} otherwise ask for another suggestion";
+const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
+const next_recipe = "Sure let's take a look for a new recipe, how about: {recipe name} or {recipe name}?";
+const no_more recipes ="";
+const what_next = "{recipe name} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone"''
+const affirm_what_next = "Sure, I've sent the recipe details to your phone";
 const INGREDIENTS_INTRO = "You will need"; // Here follows a list of ingredients
-const INGREDIENTS_ENDING = "Does that sound like a meal you want to eat?"; // Will be said after the list of ingredients
+const INGREDIENTS_ENDING = ""; // Will be said after the list of ingredients
 const INGREDIENTS_REMINDER_INTRO = "The ingredients for this step are"; //the ingredients will follows
 const INGREDIENTS_REMINDER_NONE = "You've already got the ingredients measured out"; //for if there are no measurements for ingredients
 
@@ -43,168 +47,107 @@ const CLOSING_MESSAGE = "Wonderful. Hope you have a great meal, or as the German
 const recipes = {
   breakfast: [
     {
-      name: "P B and J",
+      name: "Dumpling Pancake",
       instructions: [
-        "You'll need some sandwhich bread, peanut butter and jelly of your choosing.",
-        "Find some sandwich bread.",
-        "Spread a thick layer of peanut butter onto the bread.",
-        "Dump a huge spoonful of jelly on top of the peanut butter and spread it.",
-        "There you go! You just made a delicious peanut butter jelly sandwich. Goodbye."
+        "Cook the dumplings as per the manufactor's instructions.",
+        "Meanwhile prepare the pancake mix by mixing together flour, sugar and salt",
+        "In another bowl whisk together eggs, milk, and fizzy drink ",
+        "Slowly add in the the egg mix into the flour and combine till smooth.",
+        "Chill this mixture in the fridge for as you warm up the frying pan with some oil and wait for the dumplings to finish cooking.",
+        "When the dumplings are cooked and the pan is hot enough, take the mixture from fridge and stir, .",
+        "Place the dumplings in the hot pan and pour in the egg mixture over the top, cook till egg golden brown on the bottom",
+        "Turn the pancake out onto a plate and enjoy. Remember to share it with me too - I love a good dumpling pancake"
       ],
       ingredients: [
-        "peanut butter",
-        "jelly",
-        "bread"
+        "Premade dumplings",
+        "2 cups plain flour",
+        "2 cups milk",
+        "1 and a half cups of sparkling water",
+        "4 whole eggs"
       ]
     },
-    {
-      name: "Cereal",
-      instructions: [
-        "You'll need some milk and cereal.",
-        "Get a bowl",
-        "Fill it half-way with cereal.",
-        "Now fill up the rest of the bowl with milk.",
-        "Mmmmmh. This is going to be some gooood breakfast."
-      ],
-      ingredients: [
-        "cereal"
-      ]
-    },
-    {
-      name: "Bacon and Eggs",
-      instructions: [
-        "For this recipe you will need to buy some simple frying oil, four strips of bacon and two eggs.",
-        "Spread a thin layer of oil on a pan and start heating it on the stove.",
-        "Throw the bacon strips into the pan and wait until the bacon is significantly darker and crispy.",
-        "Take out the bacon and put it aside. Get the eggs, open them and gently let their content into the pan.",
-        "The eggs are done when all the egg white has become fully white and the yoke is still slightly liquid.",
-        "Bam! That's what I call some sweet, awesome breakfast!"
-      ],
-      ingredients: [
-        "bacon",
-        "eggs"
-      ]
-    }
+
   ],
   lunch: [
     {
-      name: "Potatoes and broccoli",
+      name: "Kimchi Pancake",
       instructions: [
-        "You'll need some potatoes and broccoli for this... and of course water. But I don't think I need to mention that.",
-        "Fill two pots with water, place them on the stove and turn up the heat all the way. Once the water is boiling put the potatoes in one pot and the broccoli in the other.",
-        "Now, wait until the potatoes and broccoli have exactly the consistency you like.",
-        "Excellent! This is some gooood eating."
+        "Finely chop up the kimchii .",
+        "Cut the onions in the same manner, cutting into small cubes is preferable",
+        "Make the pancake batter by whisking the eggs and milk together, then add in flour",
+        "Add in the kimchii and onion and combine.",
+        "Add a generous amount of oil on a non-stick pan or skillet and wait until it reaches medium-high heat.",
+        "Ladle the batter to fry in either one large pancake or several smaller ones, cook for about 5 minutes or until slightly golden brown.",
+        "Transfer to a serving plate and add the cheese so it melt slightly. Enjoy while hot and add more cheese if you want some more cheese - I know I would"
       ],
       ingredients: [
-        "potatoes",
-        "broccoli",
-        "water"
+        "2 cups kimchi",
+        "half a cup of milk",
+        "quarter of an onion",
+        "60 grams cheese",
+        "4 eggs",
+        "half a cup of flour"
       ]
     },
-    {
-      name: "Sandwich",
-      instructions: [
-        "Call Subway and order a sandwich you really like.",
-        "Wait until they deliver it. Maybe do some situps. That's really good for your body, so I've heard.",
-        "Once the sandwich deliverer arrives, rejoice!"
-      ],
-      ingredients: [
-        "nothing"
-      ]
-    },
-    {
-      name: "Brolied Lobster Tails with Garlic and Chili Butter",
-      instructions: [
-        "You know, several weeks ago I was in Europe. I tell you, that's really a continent worth seeing. So many different and cool countries.",
-        "Germany, France, Poland, Italy, ... So much to see.",
-        "Oh right... Brolied Lobster Tails with Garlic and Chili Butter. You don't really don't think you can do that in 5 minutes, right?",
-        "Well you can't."
-      ],
-      ingredients: [
-        "lobster tail",
-        "garlic",
-        "chili",
-        "butter"
-      ]
-    }
+
   ],
   dinner: [
     {
-      name: "Frozen Pizza",
+      name: "Mackeral pancake",
       instructions: [
-        "Did you know you don't even need to make your own pizza anymore these days? Incredible! Go and buy some!",
-        "Preheat the oven at 180 degrees celcius.",
-        "Once the oven is preheated put the pizza in there. But without the plastic wrap! That's really not fun to eat. I tell you, I knew a guy... but that's a story for another time.",
-        "After 10 to 15 minutes take the pizza out of the oven. If you're really intro crusty pizza, you can wait 20 minutes. I've heard burned pizza is not as unhealthy as people might think."
+        "Preheat oven to 400 degrees.",
+        "Whisk the eggs in a bowl with the herbs.",
+        "Melt the butter in a small frying pan, and pour in the eggs. When set, flip over.",
+        "Heat a little oil on a griddle pan, and add the spring onions. Grill all sides.",
+        "Dredge the fish in some flour, dip in the beaten egg and coat with couscous.",
+        "Grill in the same pan, and transfer to the oven for 5-10 minutes.",
+        "Serve on the pancake with the spring onions - and enjoy!"
       ],
       ingredients: [
-        "frozen pizza",
-        "an oven"
+        "3 whole eggs",
+        "2 tablespoons chopped parsley",
+        "4 spring onions",
+        "tinned mackeral",
+        "1 whole beaten egg",
+        "50 grams couscous",
+        "1 knob of butter"
       ]
     },
-    {
-      name: "Ice cream",
-      instructions: [
-        "For this recipe you just need ice cream.",
-        "Open your freezer, get the ice cream and a small spoon. Only weird people use big spoons to eat ice cream. Don't be weird.",
-        "Enjoy the ice cream. Don't take too big of a bite! You might get brain freeze."
-      ],
-      ingredients: [
-        "ice cream",
-        "a spoon"
-      ]
-    },
-    {
-      name: "Steak and fries",
-      instructions: [
-        "Excellent choice! You'll need a fresh steak and some frozen fries.",
-        "Preheat the oven and once it's done preheating put the fries in there.",
-        "Use a black pan and start heating it up.",
-        "Put the steak in the heated pan and shortly sear it from both sides.",
-        "Now, turn down the heat on the stove and keep frying the steak for as long as you want. It really depends on how medium or well done you like your steak. So it's kind of hard for me to tell you how long to fry it. Just do what your heart tells you to do.",
-        "Perfect. This is a really fancy meal."
-      ],
-      ingredients: [
-        "steak",
-        "fries",
-        "oil"
-      ]
-    }
+
   ],
   snack: [
     {
-      name: "Chips",
+      name: "Spiced Pudla Pancakes",
       instructions: [
-        "Go to the closest supermarket and buy a bag of chips.",
-        "Open the bag.",
-        "Enjoy!"
+        "Boil some water and cook the frozen peas for 4 minutes.",
+        "Then blanch them in cold water for 2 minutes and drain.",
+        "In a large bowl, whisk together the chickpea flour, bicarbonate of soda, salt, pepper, turmeric, and garam masala. ",
+        "Whisk in the water until the batter is smooth.",
+        "Stir in the lime juice (the mixture will froth briefly).",
+        "Then fold in the tomato, coriander, and peas.",
+        "Heat 1 teaspoon of the oil in a pan over medium-low heat",
+        "Ladle in one-quarter of the batter and cook for about 3 minutes, until bubbles form on the upper surface and the bottom is starting to brown",
+        "Flip the pancake and cook the other side for 2 to 3 minutes. Remove to plate once both sides are cooked.",
+        "Repeat three more times with the remaining batter.",
+        "Once all the pancakes have been cooked, either eat whole or cut into slices and take in the beautiful aroma - yum!"
       ],
       ingredients: [
-        "chips"
+        "210 grams froen peas",
+        "240 grams chickpea flour",
+        "1 teaspoon bicarbonate of soda",
+        "half tablespoon of salt",
+        "pinch of black pepper",
+        "half teaspoon of turmeric",
+        "1 teaspoon garam marsala",
+        "1 tablespoon lime juice",
+        "a diced tomato",
+        "30 grams of coriander",
+        "4 teaspoons of oil"
+
+
       ]
     },
-    {
-      name: "Banana",
-      instructions: [
-        "If you happen to live in the jungle, you might find a banana on a tree somewhere. If you don't, you might have to go to a market close by.",
-        "Pick a yellow banana. Don't pick a green banana. Those have to sit for a while before being edible. And we want this recipe to be done within 5 minutes. So seriously, don't screw this up. Pick a yellow banana!",
-        "Feeling like a monkey today? Well that's important sometimes, too."
-      ],
-      ingredients: [
-        "banana"
-      ]
-    },
-    {
-      name: "Beef Jerkey",
-      instructions: [
-        "Go to a grocery store and buy some beef jerkey.",
-        "Great! Now open the bag.",
-        "Have fun eating."
-      ],
-      ingredients: [
-        "beef jerkey"
-      ]
-    }
+
   ],
   dessert: [
     {
@@ -213,9 +156,9 @@ const recipes = {
         "Prepare the pancake mix by mixing together flour, sugar and salt",
         "In another bowl whisk together eggs, milk, and sparkling water ",
         "Slowly add in the the egg mix into the flour and combine till smooth.",
-        "Chill this mixture in the fridge for as you warm up the frying pan with some oil.",
+        "Chill this mixture in the fridge as you warm up the frying pan with some oil.",
         "Pour in the egg mixture to the pan to thinly coat it, cook for 15 to 30 seconds. Repeat this process with each new crepe and use a towel to stack them.",
-        "Once all are cooked and cooled start to build up the cake by layering the nutella on the pancake, then add another pancakw with more nutella on to stack them.",
+        "Once all are cooked and cooled. start to build up the cake by layering the nutella on the pancake, then add another pancakw with more nutella on to stack them.",
         "Once you have stacked them all, marvel at your work before devouring them."
       ],
       ingredients: [
