@@ -31,19 +31,21 @@ const RECIPE_ADJECTIVES = [
 const SUGGEST_TWO_RECIPES = (mealType, recipeName1, recipeName2) => `So I've found 2 recipes for ${mealType}: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`;
 const MISUNDERSTOOD_RECIPE_ANSWER = "Sorry, I didn't catch that, you can choose between {recipe name} or a {recipe name} otherwise ask for another suggestion";
 const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
+
 const MORE_RECIPES = (recipeName1, recipeName2) => `Sure let's take a look for a new recipe, how about: ${recipeName1} or ${recipeName2}?`;
 const WHAT_NEXT = recipeName => `${recipeName} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone`;
 const RECIPE_SAVED = "No worries mate, I've saved the recipe for later";
 const SENT_TO_PHONE = "Sure, I've sent the recipe details to your phone";
-const INGREDIENTS_INTRO = "You will need"; // Here follows a list of ingredients
-const INGREDIENTS_ENDING = ""; // Will be said after the list of ingredients
+const INGREDIENTS_INTRO = "{Discourse Marker}, for this recipe you'll need {ingredient list}", ; // Here follows a list of ingredients
+const INGREDIENTS_ENDING = "what would you like to do now?"; // Will be said after the list of ingredients
+
 const INGREDIENTS_REMINDER_INTRO = "The ingredients for this step are"; //the ingredients will follows
 const INGREDIENTS_REMINDER_NONE = "You've already got the ingredients measured out"; //for if there are no measurements for ingredients
 
-const FIRST_TIME_INSTRUCTIONS = "Say 'next' to go to the next line of instructions. Say 'repeat' if you didn't understand me or want to hear the last line of instructions again.";
+const FIRST_TIME_INSTRUCTIONS = "Super, let me know if you need a step repeated or if you're ready for the next step. Let's start cooking. ";
 const REPROMPT_INSTRUCTIONS = "Say 'next' to go to the next line of instructions. Say 'repeat' if you didn't understand me or want to hear the last line of instructions again.";
 const MISUNDERSTOOD_INSTRUCTIONS_ANSWER = "Sorry, I didn't understand you there.";
-const CLOSING_MESSAGE = "Wonderful. Hope you have a great meal, or as the Germans say, Guten Appetit!";
+const CLOSING_MESSAGE = "";
 
 const recipes = {
   breakfast: [
