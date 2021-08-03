@@ -10,7 +10,10 @@
     "license": "ISC",
     "dependencies": {
         "ask-sdk": "^2.5.2",
-        "aws-sdk": "^2.326.0",
-        "ask-sdk-v1adapter": "^2.5.2"
+        "ask-sdk-v1adapter": "^2.5.2",
+        "aws-sdk": "^2.326.0"
+    },
+    "devDependencies": {
+        "standard": "^16.0.3"
     }
 }
