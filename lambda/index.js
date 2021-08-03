@@ -46,7 +46,7 @@ const MORE_RECIPES = (recipeName1, recipeName2) => `Sure let's take a look for a
 const WHAT_NEXT = recipeName => `${recipeName} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone`;
 const RECIPE_SAVED = "No worries mate, I've saved the recipe for later";
 const SENT_TO_PHONE = "Sure, I've sent the recipe details to your phone";
-const INGREDIENTS_INTRO = "{Discourse Marker}, for this recipe you'll need {ingredient list}", ; // Here follows a list of ingredients
+const INGREDIENTS_INTRO = "{Discourse Marker}, for this recipe you'll need {ingredient list}"; // Here follows a list of ingredients
 const INGREDIENTS_ENDING = "what would you like to do now?"; // Will be said after the list of ingredients
 
 const INGREDIENTS_REMINDER_INTRO = "The ingredients for this step are"; //the ingredients will follows
@@ -192,7 +192,7 @@ const recipes = {
       ],
       ingredients: [
         "1 tin of tuna",
-        "As much mayo needed for tuna mayo"
+        "As much mayo needed for tuna mayo",
         "half a cup of milk",
         "quarter of an onion",
         "60 grams cheese",
@@ -200,20 +200,18 @@ const recipes = {
         "half a cup of flour"
       ]
     },
-
-  {
-    name: "Lemon Sardines wholewheat pancakes",
-    instructions: [
-      "Preheat oven to 425 degrees.",
-      "Place eggs, milk, flour and salt into a blender.",
-      "Whirl it around until it's well-mixed, about 1 minute.",
-      "Melt butter in skillet over medium-low heat.",
-      "Pour pancake mix into skillet and pop it into the oven. Bake for 12-15 minutes, until the edges are golden brown and pulling away from the sides.",
-      "Remove from oven and use a large circular spatula to scoop it from the skillet onto a plate.",
-      "Squeeze the juice from half a lemon all over the pancake.",
-      "Add the lemon sardines on top and cut in half - enjoy the lemon goodness"
-
     {
+      name: "Lemon Sardines wholewheat pancakes",
+      instructions: [
+        "Preheat oven to 425 degrees.",
+        "Place eggs, milk, flour and salt into a blender.",
+        "Whirl it around until it's well-mixed, about 1 minute.",
+        "Melt butter in skillet over medium-low heat.",
+        "Pour pancake mix into skillet and pop it into the oven. Bake for 12-15 minutes, until the edges are golden brown and pulling away from the sides.",
+        "Remove from oven and use a large circular spatula to scoop it from the skillet onto a plate.",
+        "Squeeze the juice from half a lemon all over the pancake.",
+        "Add the lemon sardines on top and cut in half - enjoy the lemon goodness"
+      ],
       ingredients: [
         "1 tin of lemon sardines",
         "half a cup of milk",
@@ -222,12 +220,7 @@ const recipes = {
         "4 eggs",
         "half a cup of wholewheat flour"
       ]
-
-    ],
-
-      },
-    ],
-
+    }
   ],
   dinner: [
     {
@@ -263,7 +256,7 @@ const recipes = {
       "Then add in the egg mixture and mix together.",
       "Add the chorizo to the mixture",
       "Heat half of vegetable oil in a frying pan",
-      "Spoon mixture into hot oil to make 3-4 inch rounds. Fry in batches until golden brown on each side and place on paper to drain excess oil."
+      "Spoon mixture into hot oil to make 3-4 inch rounds. Fry in batches until golden brown on each side and place on paper to drain excess oil.",
       "Serve hot with any sauce you like - personally I'd recommend some good ketchup!"
     ],
 
@@ -272,10 +265,11 @@ const recipes = {
       "4 large potatoes",
       "1 onion",
       "3 large eggs",
-      "100 grams of chorizo"
+      "100 grams of chorizo",
       "one and a half teaspoons salt",
-      "quarter teaspoon pepper",
+      "quarter teaspoon pepper"
     ]
+  },
 
     {
       name: "Cabbage, Leek and Carrot Pancake",
@@ -296,7 +290,7 @@ const recipes = {
       "600 grams cabbage",
       "1 leek",
       "340 grams carrots",
-      "100 grams of frozen peas"
+      "100 grams of frozen peas",
       "one and a half teaspoons salt",
       "160 grams rice flour",
       "3 eggs",
@@ -304,7 +298,8 @@ const recipes = {
       "2 tablespoons soy sauce",
       "2 tablespoons rice wine vinegar",
       "1 teaspoon ginger paste"
-
+    ]
+  },
 
       {
         name: "Spiced Dahl Pancake",
@@ -314,12 +309,12 @@ const recipes = {
           "In another bowl whisk together eggs, milk, and fizzy drink ",
           "Slowly add in the the egg mix into the flour and combine till smooth.",
           "Pour egg mixture into pan with the spices and cook",
-          "Now cook the dalh as per packet instructions"
+          "Now cook the dalh as per packet instructions",
           "Turn the pancake out onto a plate and add the dahl - Enjoy the spicy aromas!"
         ],
         ingredients: [
           "spices you like",
-          "1 packet dahl"
+          "1 packet dahl",
           "2 cups plain flour",
           "2 cups milk",
           "1 and a half cups of sparkling water",
@@ -371,7 +366,7 @@ const recipes = {
       "Then whisk in your vanilla essence.",
       "Heat up a non-stick pan (no oil) and put enough batter to make a small pancake.",
       "When bubbles start appearing, flip your pancake. When the pancake is done, leave to cool and cover with a damp tea towel so they don’t dry out.",
-      "Make another pancake and continue till all the mix has been used"
+      "Make another pancake and continue till all the mix has been used",
       "With all the pancakes cooked, put in a dollop of nutella in the centre of the pancake and cover with another to make like a sandwich. Repeat this process",
       "When all pancakes are paired up with their chocolate centre, prepare to eat these delicious panckaes!"
     ],
@@ -386,6 +381,8 @@ const recipes = {
       "half teaspoon of vanilla essence",
       "as much nutella as you want"
     ],
+  },
+  {
 
     name: "Jam Dorayaki",
     instructions: [
@@ -395,7 +392,7 @@ const recipes = {
       "Then whisk in your vanilla essence.",
       "Heat up a non-stick pan (no oil) and put enough batter to make a small pancake.",
       "When bubbles start appearing, flip your pancake. When the pancake is done, leave to cool and cover with a damp tea towel so they don’t dry out.",
-      "Make another pancake and continue till all the mix has been used"
+      "Make another pancake and continue till all the mix has been used",
       "With all the pancakes cooked, put in a dollop of nutella in the centre of the pancake and cover with another to make like a sandwich. Repeat this process",
       "When all pancakes are paired up with their chocolate centre, prepare to eat these delicious panckaes!"
     ],
@@ -422,7 +419,7 @@ const recipes = {
     "Then whisk in your vanilla essence.",
     "Heat up a non-stick pan (no oil) and put enough batter to make a small pancake.",
     "When bubbles start appearing, flip your pancake. When the pancake is done, leave to cool and cover with a damp tea towel so they don’t dry out.",
-    "Make another pancake and continue till all the mix has been used"
+    "Make another pancake and continue till all the mix has been used",
     "With all the pancakes cooked, put in a dollop of nutella in the centre of the pancake and cover with another to make like a sandwich. Repeat this process",
     "When all pancakes are paired up with their chocolate centre, prepare to eat these delicious panckaes!"
   ],
@@ -467,7 +464,8 @@ const recipes = {
       "350 grams of sweet potato",
       "15 mills of milk",
       "6 grams butter"
-
+    ]
+  },
 
 
     {
@@ -532,10 +530,11 @@ const recipes = {
       "2 large eggs",
       "150 grams of roasted peanuts"
     ],
+  },
 
     {
        name: "Almond Butter pancake roll",
-      instructions:
+      instructions: [
         "For the pancake mix, sift flour and green tea powder into bowl.",
         "Add in the sugar to the flour mix and combine.",
         "Now slowly add in the egg and milk to the flour mix and combine .",
@@ -547,7 +546,6 @@ const recipes = {
         "Return this roll to pan and gently cook it for a few more minutes",
         "Take off the pan, set on a plate and chop into slices - slices as big or as small as you want. Then dust with some more green tea powder and eat with pleasure!"
       ],
-    {
       ingredients: [
         "60 grams flour",
         "1 teaspoon of green tea powder",
@@ -558,8 +556,7 @@ const recipes = {
         "350 grams of Almond butter",
         "15 mills of milk",
         "6 grams butter"
-
-
+      ]
     }
   ]
 };
