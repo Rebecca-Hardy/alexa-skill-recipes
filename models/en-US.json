@@ -56,6 +56,22 @@
                   ]
               },
               {
+                  "name": "RandomRecipeIntent",
+                  "samples": [
+                      "Can I have a surprise recipe",
+                      "Could you give me something surprising",
+                      "Give me any recipe please",
+                      "Give me anything",
+                      "Any recipe",
+                      "I'd like some inspiration",
+                      "Can you give me some inspiration please",
+                      "Surprise me",
+                      "Pancake me",
+                      "I don't mind what I cook",
+                      "Any pancakes will do"
+                  ]
+              },
+              {
                   "name": "MoreRecipesIntent",
                   "samples": [
                       "next",

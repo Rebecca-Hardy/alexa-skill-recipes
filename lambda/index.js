@@ -29,9 +29,19 @@ const RECIPE_ADJECTIVES = [
   "easy"
 ];
 const SUGGEST_TWO_RECIPES = (mealType, recipeName1, recipeName2) => `So I've found 2 recipes for ${mealType}: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`;
+const RANDOM_RECIPE_SUGGESTERS = [
+  (recipeName1, recipeName2) => `How exciting! How about ${recipeName1} or ${recipeName2}?`,
+  (recipeName1, recipeName2) => `So I've 2 suggestions for you: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`,
+  (recipeName1, recipeName2) => `After some quick thinking, I'd recommend a ${recipeName1} or a ${recipeName2}, which would you prefer?`,
+  (recipeName1, recipeName2) => `Alright I'd recommend either ${recipeName1} or a ${recipeName2}. Would you prefer the first or second option?`,
+];
 const MISUNDERSTOOD_RECIPE_ANSWER = (recipeName1, recipeName2) => `Sorry, I didn't catch that, you can choose between ${recipeName1} or a ${recipeName2} otherwise ask for another suggestion`;
-const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
-
+const NO_REMAINING_RECIPE = [
+  "It looks like there are no more recipes that match what you want. I'm sorry about that. I suggest starting a new search so I can help you.",
+  "That's a shame, I've not be able to find any recipes that suit you. I'd suggest trying a new search, stating the meal type.",
+  "I'm sorry, there are no recipes matching what you want. Try a new search using the type of meal you want to cook.",
+];
+const MISUNDERSTOOD_NO_REMAINING_RECIPE_ANSWER = "Sorry, I didn't catch that. Would you like to look for a new recipe?";
 const MORE_RECIPES = (recipeName1, recipeName2) => `Sure let's take a look for a new recipe, how about: ${recipeName1} or ${recipeName2}?`;
 const WHAT_NEXT = recipeName => `${recipeName} sounds good. You can start the recipe, save the recipe or send the recipe details to your phone`;
 const RECIPE_SAVED = "No worries mate, I've saved the recipe for later";
@@ -585,8 +595,23 @@ const _setMealType = handler => {
   return true;
 };
 const _resetRemainingRecipes = handler => {
-  handler.attributes['remainingRecipes'] = recipes[handler.attributes['mealType']].slice();
+  if (handler.attributes['mealType']) {
+    // Recipes by meal type
+    handler.attributes['remainingRecipes'] = recipes[handler.attributes['mealType']].slice();
+  } else {
+    // All recipes to select at random
+    let remainingRecipes = [];
+    Object.values(recipes).forEach(mealTypeRecipes => {
+      remainingRecipes = remainingRecipes.concat(mealTypeRecipes);
+    });
+    handler.attributes['remainingRecipes'] = remainingRecipes;
+  }
   handler.attributes['recipesWerePresented'] = false;
+}
+const _popRemainingRecipe = handler => {
+  const remaining = handler.attributes['remainingRecipes'];
+   // Select a random recipe
+  return remaining.splice(_randomIndexOfArray(remaining), 1)[0];
 }
 
 const _randomIndexOfArray = (array) => Math.floor(Math.random() * array.length);
@@ -645,6 +670,12 @@ const startModeHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
       this.emit(':ask', MEALTYPE_NOT_IN_LIST(_selectedMealType(this)), MEALTYPE_NOT_IN_LIST(_selectedMealType(this)));
     }
   },
+  'RandomRecipeIntent': function() {
+    this.attributes['mealType'] = null;
+    _resetRemainingRecipes(this);
+    this.handler.state = states.RECIPEMODE;
+    this.emitWithState('Recipe');
+  },
   'AMAZON.HelpIntent': function(){
     this.emit(':ask', HELP_START, HELP_START_REPROMPT);
   },
@@ -666,19 +697,34 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
     }
 
     if(this.attributes['remainingRecipes'].length >= 2){
+      // Do we have a meal type or are we getting random recipes?
+      const hasMealType = !!this.attributes['mealType'];
       // Check if we've already presented some recipes
       const firstRecipes = !this.attributes['recipesWerePresented'];
       this.attributes['recipesWerePresented'] = true
       // Select 2 random recipes and remove them form remainingRecipes
-      this.attributes['recipe1'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
-      this.attributes['recipe2'] = this.attributes['remainingRecipes'].splice(_randomIndexOfArray(this.attributes['remainingRecipes']), 1)[0]; // Select a random recipe
+      console.log('Selecting recipes', {
+        hasMealType,
+        firstRecipes
+      });
+      this.attributes['recipe1'] = _popRemainingRecipe(this);
+      this.attributes['recipe2'] = _popRemainingRecipe(this);
       // Ask user to confirm selection
       if (firstRecipes) {
-        this.emit(
-          ':ask',
-          SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name),
-          SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name)
-        );
+        if (hasMealType) {
+          this.emit(
+            ':ask',
+            SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name),
+            SUGGEST_TWO_RECIPES(this.attributes['mealType'], this.attributes['recipe1'].name, this.attributes['recipe2'].name)
+          );
+        } else {
+          const format = () => _pickRandom(RANDOM_RECIPE_SUGGESTERS)(this.attributes['recipe1'].name, this.attributes['recipe2'].name);
+          this.emit(
+            ':ask',
+            format(),
+            format()
+          );
+        }
       } else {
         this.emit(
           ':ask',
@@ -735,7 +781,8 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
 
 const noMoreRecipesModeHandlers = Alexa.CreateStateHandler(states.NOMORERECIPESMODE, {
   'Prompt': function(){
-    this.emit(':ask', NO_REMAINING_RECIPE, NO_REMAINING_RECIPE);
+    const response = () => _pickRandom(NO_REMAINING_RECIPE);
+    this.emit(':ask', response(), response());
   },
   'AMAZON.YesIntent': function(){
     this.attributes['mealType'] = null;
@@ -755,7 +802,7 @@ const noMoreRecipesModeHandlers = Alexa.CreateStateHandler(states.NOMORERECIPESM
     this.emit(':tell', STOP_MESSAGE);
   },
   'Unhandled': function(){
-    this.emit(':ask', MISUNDERSTOOD_RECIPE_ANSWER, MISUNDERSTOOD_RECIPE_ANSWER);
+    this.emit(':ask', MISUNDERSTOOD_NO_REMAINING_RECIPE_ANSWER, MISUNDERSTOOD_NO_REMAINING_RECIPE_ANSWER);
   }
 });
 
