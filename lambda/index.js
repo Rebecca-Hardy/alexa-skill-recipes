@@ -29,7 +29,7 @@ const RECIPE_ADJECTIVES = [
   "easy"
 ];
 const SUGGEST_TWO_RECIPES = (mealType, recipeName1, recipeName2) => `So I've found 2 recipes for ${mealType}: a ${recipeName1} or a ${recipeName2}, you can say 1 or 2 or next for another recipe`;
-const MISUNDERSTOOD_RECIPE_ANSWER = "Sorry, I didn't catch that, you can choose between {recipe name} or a {recipe name} otherwise ask for another suggestion";
+const MISUNDERSTOOD_RECIPE_ANSWER = (recipeName1, recipeName2) => `Sorry, I didn't catch that, you can choose between ${recipeName1} or a ${recipeName2} otherwise ask for another suggestion`;
 const NO_REMAINING_RECIPE = "This was it. I don't know any more recipes. Do you want to select a different meal type?";
 
 const MORE_RECIPES = (recipeName1, recipeName2) => `Sure let's take a look for a new recipe, how about: ${recipeName1} or ${recipeName2}?`;
@@ -727,8 +727,9 @@ const recipeModeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
   'AMAZON.StopIntent': function(){
     this.emit(':tell', STOP_MESSAGE);
   },
-  'Unhandled': function(){
-    this.emit(':ask', MISUNDERSTOOD_RECIPE_ANSWER, MISUNDERSTOOD_RECIPE_ANSWER);
+  'Unhandled': function() {
+    const text = MISUNDERSTOOD_RECIPE_ANSWER(this.attributes['recipe1'].name, this.attributes['recipe2'].name);
+    this.emit(':ask', text, text);
   }
 });
 
